@@ -5,6 +5,7 @@ The original model was implemented in [caffe](https://github.com/DeepScale/Squee
 
 ## Reference
 [pysqueezenet by yhenon](https://github.com/yhenon/pysqueezenet)
+
 Differences:
 * Switch from Graph model to Keras 1.0 functional API
 * Fix the bug of pooling layer 
