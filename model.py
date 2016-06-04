@@ -6,7 +6,7 @@ from keras.layers import Convolution2D, MaxPooling2D
 from keras.layers import AveragePooling2D
 
 
-def SqueezeNet(nb_classes, inputs=(3, 227, 227)):
+def SqueezeNet(nb_classes, inputs=(3, 224, 224)):
     """ Keras Implementation of SqueezeNet(arXiv 1602.07360)
 
     @param nb_classes: total number of final categories
@@ -49,7 +49,7 @@ def SqueezeNet(nb_classes, inputs=(3, 227, 227)):
 
     fire4_squeeze = Convolution2D(
         32, 1, 1, activation='relu', init='glorot_uniform',
-        border_mode='same', name='fire4_squeeze')(merge2)
+        border_mode='same', name='fire4_squeeze')(merge3)
     fire4_expand1 = Convolution2D(
         128, 1, 1, activation='relu', init='glorot_uniform',
         border_mode='same', name='fire4_expand1')(fire4_squeeze)
