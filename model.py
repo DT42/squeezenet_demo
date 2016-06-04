@@ -130,7 +130,6 @@ def SqueezeNet(nb_classes, inputs=(3, 224, 224)):
         border_mode='valid', name='conv10')(fire9_dropout)
     # The size should match the output of conv10
     avgpool10 = AveragePooling2D((13, 13), name='avgpool10')(conv10)
-    # avgpool10 = AveragePooling2D((1, 1), name='avgpool10')(conv10)
 
     flatten = Flatten(name='flatten')(avgpool10)
     softmax = Activation("softmax", name='softmax')(flatten)
