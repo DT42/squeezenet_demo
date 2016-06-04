@@ -18,8 +18,8 @@ def SqueezeNet(nb_classes, inputs=(3, 227, 227)):
 
     input_img = Input(shape=inputs)
     conv1 = Convolution2D(
-        96, 3, 3, activation='relu', init='glorot_uniform',
-        subsample=(2, 2), border_mode='valid', name='conv1')(input_img)
+        96, 7, 7, activation='relu', init='glorot_uniform',
+        subsample=(2, 2), border_mode='same', name='conv1')(input_img)
     maxpool1 = MaxPooling2D(
         pool_size=(3, 3), strides=(2, 2), name='maxpool1')(conv1)
 
@@ -44,7 +44,7 @@ def SqueezeNet(nb_classes, inputs=(3, 227, 227)):
     fire3_expand2 = Convolution2D(
         64, 3, 3, activation='relu', init='glorot_uniform',
         border_mode='same', name='fire3_expand2')(fire3_squeeze)
-    merge2 = merge(
+    merge3 = merge(
         [fire3_expand1, fire3_expand2], mode='concat', concat_axis=1)
 
     fire4_squeeze = Convolution2D(
