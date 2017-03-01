@@ -8,15 +8,52 @@ python squeezenet_demo.py --action='predice'\
     -p /db/Roasted-Broccoli-Pasta-Recipe-5-683x1024.jpg
 """
 import time
+import json
 import argparse
+import model as km
 from simdat.core import dp_tools
-from simdat.core import keras_models as km
-from simdat.core import tools
 from keras.optimizers import Adam
 from keras.optimizers import SGD
 
 dp = dp_tools.DP()
-tl = tools.DATA()
+
+
+def parse_json(fname):
+    """Parse the input profile
+
+    @param fname: input profile path
+
+    @return data: a dictionary with user-defined data for training
+
+    """
+    with open(fname) as data_file:
+        data = json.load(data_file)
+    return data
+
+
+def write_json(data, fname='./output.json'):
+    """Write data to json
+
+    @param data: object to be written
+
+    Keyword arguments:
+    fname  -- output filename (default './output.json')
+
+    """
+    with open(fname, 'w') as fp:
+        json.dump(data, fp, cls=NumpyAwareJSONEncoder)
+
+
+def print_time(t0, s):
+    """Print how much time has been spent
+
+    @param t0: previous timestamp
+    @param s: description of this step
+
+    """
+
+    print("%.5f seconds to %s" % ((time.time() - t0), s))
+    return time.time()
 
 
 def main():
@@ -82,16 +119,16 @@ def main():
         nb_class = train_generator.nb_class
         print('[squeezenet_demo] Total classes are %i' % nb_class)
 
-        t0 = tl.print_time(t0, 'initialize data')
+        t0 = print_time(t0, 'initialize data')
         model = km.SqueezeNet(
             nb_class, inputs=(args.channels, args.height, args.width))
-        dp.visualize_model(model)
-        t0 = tl.print_time(t0, 'build the model')
+        # dp.visualize_model(model)
+        t0 = print_time(t0, 'build the model')
 
         model.compile(
             optimizer=sgd, loss='categorical_crossentropy',
             metrics=['accuracy'])
-        t0 = tl.print_time(t0, 'compile model')
+        t0 = print_time(t0, 'compile model')
 
         model.fit_generator(
             train_generator,
@@ -99,7 +136,7 @@ def main():
             nb_epoch=args.epochs,
             validation_data=validation_generator,
             nb_val_samples=nb_val_samples)
-        t0 = tl.print_time(t0, 'train model')
+        t0 = print_time(t0, 'train model')
 
         model.save_weights('./weights.h5', overwrite=True)
         model_parms = {'nb_class': nb_class,
@@ -109,11 +146,11 @@ def main():
                        'channels': args.channels,
                        'height': args.height,
                        'width': args.width}
-        tl.write_json(model_parms, fname='./model_parms.json')
-        t0 = tl.print_time(t0, 'save model')
+        write_json(model_parms, fname='./model_parms.json')
+        t0 = print_time(t0, 'save model')
 
     elif args.action == 'predict':
-        _parms = tl.parse_json('./model_parms.json')
+        _parms = parse_json('./model_parms.json')
         model = km.SqueezeNet(
             _parms['nb_class'],
             inputs=(_parms['channels'], _parms['height'], _parms['width']),
@@ -125,7 +162,7 @@ def main():
 
         X_test, Y_test, classes, F = dp.prepare_data_test(
             args.path, args.width, args.height)
-        t0 = tl.print_time(t0, 'prepare data')
+        t0 = print_time(t0, 'prepare data')
 
         outputs = []
         results = model.predict(
@@ -138,7 +175,7 @@ def main():
             cls = [key for key in classes if classes[key] == _cls][0]
             outputs[-1]['class'] = cls
             print('[squeezenet_demo] %s: %s (%.2f)' % (F[i], cls, max_prob))
-        t0 = tl.print_time(t0, 'predict')
+        t0 = print_time(t0, 'predict')
 
 if __name__ == '__main__':
     main()
