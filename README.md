@@ -9,6 +9,7 @@ The original model was implemented in [caffe](https://github.com/DeepScale/Squee
 Differences:
 * Switch from Graph model to Keras 1.0 functional API
 * Fix the bug of pooling layer 
+* Many thanks for [StefOe](https://github.com/StefOe), the source can now support Keras 2.0 API.
 
 ## Result
 This repository contains only the Keras implementation of the model, for other parameters used, please see the demo script, [squeezenet_demo.py](https://github.com/tammyyang/simdat/blob/devel/examples/keras/squeezenet_demo.py) in the simdat package.
