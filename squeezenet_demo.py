@@ -112,11 +112,11 @@ def main():
             args.valpath, args.width, args.height)
 
         classes = train_generator.class_indices
-        nb_train_samples = train_generator.nb_sample
-        nb_val_samples = validation_generator.nb_sample
+        nb_train_samples = train_generator.samples
+        nb_val_samples = validation_generator.samples
         print("[squeezenet_demo] N training samples: %i " % nb_train_samples)
         print("[squeezenet_demo] N validation samples: %i " % nb_val_samples)
-        nb_class = train_generator.nb_class
+        nb_class = train_generator.num_class
         print('[squeezenet_demo] Total classes are %i' % nb_class)
 
         t0 = print_time(t0, 'initialize data')
