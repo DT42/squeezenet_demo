@@ -3,7 +3,7 @@ from keras.models import Model
 from keras.layers import Input, Activation, Concatenate
 from keras.layers import Flatten, Dropout
 from keras.layers import Convolution2D, MaxPooling2D
-from keras.layers import AveragePooling2D
+from keras.layers import GlobalAveragePooling2D
 
 
 def SqueezeNet(nb_classes, inputs=(3, 224, 224)):
@@ -147,12 +147,8 @@ def SqueezeNet(nb_classes, inputs=(3, 224, 224)):
         nb_classes, (1, 1), kernel_initializer='glorot_uniform',
         padding='valid', name='conv10',
         data_format="channels_first")(fire9_dropout)
-    # The size should match the output of conv10
-    avgpool10 = AveragePooling2D(
-        (13, 13), name='avgpool10',
-        data_format="channels_first")(conv10)
 
-    flatten = Flatten(name='flatten')(avgpool10)
-    softmax = Activation("softmax", name='softmax')(flatten)
+    global_avgpool10 = GlobalAveragePooling2D(data_format='channels_first')(conv10)
+    softmax = Activation("softmax", name='softmax')(global_avgpool10)
 
     return Model(inputs=input_img, outputs=softmax)
