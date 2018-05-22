@@ -144,7 +144,7 @@ def SqueezeNet(nb_classes, inputs=(3, 224, 224)):
 
     fire9_dropout = Dropout(0.5, name='fire9_dropout')(merge9)
     conv10 = Convolution2D(
-        nb_classes, (1, 1), kernel_initializer='glorot_uniform',
+        nb_classes, (1, 1), activation='relu', kernel_initializer='glorot_uniform',
         padding='valid', name='conv10',
         data_format="channels_first")(fire9_dropout)
 
